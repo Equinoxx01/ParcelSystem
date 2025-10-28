@@ -38,35 +38,37 @@ public class rider {
 
     
     public static void viewMyParcels(config db, int userId) {
-        String sql = "SELECT * FROM tbl_parcel WHERE assigned_to = ?";
-        String[] headers = {"Parcel ID", "Name", "Sender", "Recipient", "Status"};
-        String[] cols = {"p_id", "p_name", "sender", "recipient", "status"};
-        db.viewRecords(sql, headers, cols);
-    }
-
-    
+    String sql = "SELECT * FROM tbl_parcel WHERE assigned = " + userId;
+    String[] headers = {"Parcel ID", "Name", "Sender", "Recipient", "Status", "Assigned"};
+    String[] cols = {"p_id", "p_name", "sender", "recipient", "status", "assigned"};
+    db.viewRecords(sql, headers, cols);
+}
     public static void addTracking(config db, Scanner sc) {
-        sc.nextLine();
-        System.out.print("Enter Parcel ID: ");
-        int pid = sc.nextInt();
-        sc.nextLine();
-        System.out.print("Location: ");
-        String loc = sc.nextLine();
-        System.out.print("Status: ");
-        String status = sc.nextLine();
-        System.out.print("Timestamp (YYYY-MM-DD HH:MM): ");
-        String time = sc.nextLine();
+    sc.nextLine();
+    System.out.print("Enter Parcel ID: ");
+    int pid = sc.nextInt();
+    sc.nextLine();
+    System.out.print("Location: ");
+    String loc = sc.nextLine();
+    System.out.print("Status: ");
+    String status = sc.nextLine();
+    System.out.print("Timestamp (YYYY-MM-DD HH:MM): ");
+    String time = sc.nextLine();
 
-        db.addRecord("INSERT INTO tbl_tracking(p_id, location, status, timestamp) VALUES (?, ?, ?, ?)",
-                pid, loc, status, time);
-        db.updateRecord("UPDATE tbl_parcel SET status = ? WHERE p_id = ?", status, pid);
-        System.out.println("Tracking added successfully!");
-    }
+    db.addRecord("INSERT INTO tbl_tracking(p_id, location, status, time) VALUES (?, ?, ?, ?)",
+            pid, loc, status, time);
+
+    db.updateRecord("UPDATE tbl_parcel SET status = ? WHERE p_id = ?", status, pid);
+    System.out.println("Tracking added successfully!");
+}
+
+
 
     public static void viewTracking(config db) {
-        String sql = "SELECT * FROM tbl_tracking";
-        String[] headers = {"Track ID", "Parcel ID", "Location", "Status", "Timestamp"};
-        String[] cols = {"t_id", "p_id", "location", "status", "timestamp"};
-        db.viewRecords(sql, headers, cols);
-    }
+    String sql = "SELECT * FROM tbl_tracking";
+    String[] headers = {"Track ID", "Parcel ID", "Location", "Status", "Timestamp"};
+    String[] cols = {"t_id", "p_id", "location", "status", "time"};
+    db.viewRecords(sql, headers, cols);
+}
+
 }

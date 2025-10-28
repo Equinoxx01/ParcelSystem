@@ -53,7 +53,7 @@ public class staff {
         int parcelId = sc.nextInt();
         System.out.print("Enter Rider ID: ");
         int riderId = sc.nextInt();
-        db.updateRecord("UPDATE tbl_parcel SET assigned_to = ?, status = ? WHERE p_id = ?",
+        db.updateRecord("UPDATE tbl_parcel SET assigned = ?, status = ? WHERE p_id = ?",
                 riderId, "Assigned", parcelId);
         System.out.println("Parcel assigned to rider!");
     }
@@ -61,7 +61,7 @@ public class staff {
     public static void viewParcels(config db) {
         String sql = "SELECT * FROM tbl_parcel";
         String[] headers = {"Parcel ID", "Name", "Sender", "Recipient", "Status", "Assigned To"};
-        String[] cols = {"p_id", "p_name", "sender", "recipient", "status", "assigned_to"};
+        String[] cols = {"p_id", "p_name", "sender", "recipient", "status", "assigned"};
         db.viewRecords(sql, headers, cols);
     }
 }
