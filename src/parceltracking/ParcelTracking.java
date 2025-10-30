@@ -88,20 +88,40 @@ public class ParcelTracking {
 
     
     public static void registerUser(config db, Scanner sc) {
-    System.out.print("Enter username: ");
-    String uname = sc.nextLine();
-    System.out.print("Enter password: ");
-    String pass = sc.nextLine();
+        String uname;
+        String pass;
+        String role;
+        
+        do {
+            System.out.print("Enter username: ");
+            uname = sc.nextLine().trim();
+            if (uname.isEmpty()) {
+                System.out.println("Invalid, Input a username");
+            }
+        } while (uname.isEmpty());
+        
+        do {
+            System.out.print("Enter password: ");
+            pass = sc.nextLine().trim();
+            if (pass.isEmpty()) {
+                System.out.println("Invalid, Input a password");
+            }
+        } while (pass.isEmpty());
     
-    String hashedPassword = db.hashPassword(pass);
-    
-    System.out.print("Enter role (Admin/Staff/Rider): ");
-    String role = sc.nextLine();
+        String hashedPassword = db.hashPassword(pass);
+        
+        do {
+            System.out.print("Enter role (Admin/Staff/Rider): ");
+            role = sc.nextLine().trim();
+            if (role.isEmpty()) {
+                System.out.println("Invalid, Input a role");
+            }
+        } while (role.isEmpty());
 
-    db.addRecord("INSERT INTO tbl_user(u_name, u_pass, u_role, u_status) VALUES (?, ?, ?, ?)",
-            uname, hashedPassword, role, "Pending");
+        db.addRecord("INSERT INTO tbl_user(u_name, u_pass, u_role, u_status) VALUES (?, ?, ?, ?)",
+                uname, hashedPassword, role, "Pending");
 
-    System.out.println("✅ User registered successfully! Status set to 'Pending'.");
+        System.out.println("✅ User registered successfully! Status set to 'Pending'.");
     
     }
 }
