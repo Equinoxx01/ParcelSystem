@@ -88,15 +88,20 @@ public class ParcelTracking {
 
     
     public static void registerUser(config db, Scanner sc) {
-        System.out.print("Enter username: ");
-        String uname = sc.nextLine();
-        System.out.print("Enter password: ");
-        String pass = sc.nextLine();
-        System.out.print("Enter role (Admin/Staff/Rider): ");
-        String role = sc.nextLine();
+    System.out.print("Enter username: ");
+    String uname = sc.nextLine();
+    System.out.print("Enter password: ");
+    String pass = sc.nextLine();
+    
+    String hashedPassword = db.hashPassword(pass);
+    
+    System.out.print("Enter role (Admin/Staff/Rider): ");
+    String role = sc.nextLine();
 
-        
-        db.addRecord("INSERT INTO tbl_user(u_name, u_pass, u_role) VALUES (?, ?, ?)", uname, pass, "Pending");
-        System.out.println("User registered successfully with 'Pending' status!");
+    db.addRecord("INSERT INTO tbl_user(u_name, u_pass, u_role, u_status) VALUES (?, ?, ?, ?)",
+            uname, hashedPassword, role, "Pending");
+
+    System.out.println("✅ User registered successfully! Status set to 'Pending'.");
+    
     }
 }
