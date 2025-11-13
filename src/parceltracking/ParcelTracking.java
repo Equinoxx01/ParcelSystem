@@ -46,45 +46,46 @@ public class ParcelTracking {
 
    
     public static void loginMenu(config db, Scanner sc) {
-        System.out.print("Enter username: ");
-        String uname = sc.nextLine();
-        System.out.print("Enter password: ");
-        String pass = sc.nextLine();
+    System.out.print("Enter username: ");
+    String uname = sc.nextLine();
+    System.out.print("Enter password: ");
+    String pass = sc.nextLine();
 
-        
-        List<Map<String, Object>> result = db.fetchRecords("SELECT * FROM tbl_user WHERE u_name = ? AND u_pass = ?", uname, pass);
+    String hashedPassword = db.hashPassword(pass);
 
-        if (result.isEmpty()) {
-            System.out.println("Invalid credentials!");
-            return;
-        }
+    
+    List<Map<String, Object>> result = db.fetchRecords(
+        "SELECT * FROM tbl_user WHERE u_name = ? AND u_pass = ?", 
+        uname, hashedPassword
+    );
 
-      
-        Map<String, Object> user = result.get(0);
-        String role = user.get("u_role").toString();
-        int userId = Integer.parseInt(user.get("u_id").toString());
-
-        System.out.println("Welcome, " + uname + " (" + role + ")!");
-
-      
-        switch (role.toLowerCase()) {
-            case "admin":
-                admin.adminMenu(db, sc); 
-                break;
-                
-            case "staff":
-                staff.staffMenu(db, sc);  
-                break;
-                
-            case "rider":
-                rider.riderMenu(db, sc, userId); 
-                break;
-                
-            default:
-                System.out.println("Unknown role.");
-                break;
-        }
+    if (result.isEmpty()) {
+        System.out.println("Invalid credentials!");
+        return;
     }
+
+    Map<String, Object> user = result.get(0);
+    String role = user.get("u_role").toString();
+    int userId = Integer.parseInt(user.get("u_id").toString());
+
+    System.out.println("Welcome, " + uname + " (" + role + ")!");
+
+    switch (role.toLowerCase()) {
+        case "admin":
+            admin.adminMenu(db, sc);
+            break;
+        case "staff":
+            staff.staffMenu(db, sc);
+            break;
+        case "rider":
+            rider.riderMenu(db, sc, userId);
+            break;
+        default:
+            System.out.println("Unknown role.");
+            break;
+    }
+}
+
 
     
     public static void registerUser(config db, Scanner sc) {
@@ -100,6 +101,18 @@ public class ParcelTracking {
             }
         } while (uname.isEmpty());
         
+             while (true) {
+                            
+                                String qry = "SELECT * FROM tbl_user WHERE u_name = ?";
+                            java.util.List<java.util.Map<String, Object>> result = db.fetchRecords(qry, uname);
+
+                            if (result.isEmpty()) {
+                                break;
+                            } else {
+                                System.out.print("Email already exists, Enter other Email: ");
+                                uname = sc.next();
+                            }
+                        }
         do {
             System.out.print("Enter password: ");
             pass = sc.nextLine().trim();
